@@ -87,52 +87,23 @@ def edit_mahasiswa(request):
         nim = request.POST.get('nim')
         try:
             mahasiswa = Mahasiswa.objects.get(nim=nim)
-            
-            # Delete existing QR codes before generating new ones
-            if mahasiswa.qr_code:
-                qr_mahasiswa_path = os.path.join(settings.BASE_DIR, mahasiswa.qr_code.name)
-                if os.path.exists(qr_mahasiswa_path):
-                    os.remove(qr_mahasiswa_path)
-                    mahasiswa.qr_code.delete()
 
-            if mahasiswa.qr_code_kendaraan:
-                qr_kendaraan_path = os.path.join(settings.BASE_DIR, mahasiswa.qr_code_kendaraan.name)
-                if os.path.exists(qr_kendaraan_path):
-                    os.remove(qr_kendaraan_path)
-                    mahasiswa.qr_code_kendaraan.delete()
-            
-            # Update fields
+            # Perbarui data mahasiswa
             mahasiswa.nama = request.POST.get('nama')
             mahasiswa.fakultas = request.POST.get('fakultas')
             mahasiswa.jurusan = request.POST.get('jurusan')
             mahasiswa.no_hp = request.POST.get('no_hp')
             mahasiswa.merk_kendaraan = request.POST.get('merk_kendaraan')
             mahasiswa.plat_nomor = request.POST.get('plat_nomor')
-            
-            # Regenerate QR codes if vehicle details are not default
-            if mahasiswa.merk_kendaraan != 'Tidak Ada' and mahasiswa.plat_nomor != 'Tidak Ada':
-                nama_depan = mahasiswa.nama.split()[0]
-                
-                # Personal QR Code
-                qrcode_img = qrcode.make(f'{mahasiswa.nim}-{nama_depan}-{mahasiswa.fakultas}')
-                qr_io = BytesIO()
-                qrcode_img.save(qr_io, 'PNG')
-                qrcode_file = File(qr_io, name=f'{mahasiswa.nim}-{nama_depan}-{mahasiswa.fakultas}.png')
-                mahasiswa.qr_code.save(qrcode_file.name, qrcode_file, save=False)
-                
-                # Vehicle QR Code
-                qrcode_img_kendaraan = qrcode.make(f'{mahasiswa.merk_kendaraan}-{mahasiswa.plat_nomor}-{mahasiswa.nim}')
-                qr_io_kendaraan = BytesIO()
-                qrcode_img_kendaraan.save(qr_io_kendaraan, 'PNG')
-                qrcode_kendaraan_file = File(qr_io_kendaraan, name=f'{mahasiswa.merk_kendaraan}-{mahasiswa.plat_nomor}-{mahasiswa.nim}.png')
-                mahasiswa.qr_code_kendaraan.save(qrcode_kendaraan_file.name, qrcode_kendaraan_file, save=False)
-            
+
+            # Hanya memanggil save untuk menangani semua proses di model
             mahasiswa.save()
+
             messages.success(request, 'Mahasiswa updated successfully')
-            return redirect('dashboard')  
-        
-        except mahasiswa.DoesNotExist:
+            return redirect('dashboard')
+
+        except Mahasiswa.DoesNotExist:
             messages.error(request, 'Mahasiswa not found')
-            return redirect('dashboard')  
-    
-    return redirect('dashboard') 
+            return redirect('dashboard')
+
+    return redirect('dashboard')
