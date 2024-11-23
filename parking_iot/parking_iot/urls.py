@@ -23,4 +23,6 @@ import os
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('admin_parkir.urls')),
-] + static('/qr_code_kendaraan/', document_root=os.path.join(settings.BASE_DIR, 'qr_code_kendaraan')) + static('/qr_code_mahasiswa/', document_root=os.path.join(settings.BASE_DIR, 'qr_code_mahasiswa'))
+] + static('/qr_code_kendaraan/', document_root=os.path.join(settings.BASE_DIR, 'qr_code_kendaraan')) + static('/qr_code_mahasiswa/', document_root=os.path.join(settings.BASE_DIR, 'qr_code_mahasiswa')) #, static('/screenshots/', document_root=os.path.join(settings.BASE_DIR, 'screenshots'))
+
+urlpatterns += static('/screenshots/', document_root=os.path.join(settings.BASE_DIR, 'screenshots'))

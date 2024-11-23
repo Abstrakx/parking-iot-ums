@@ -18,7 +18,7 @@
     <nav class="navbar navbar-custom">
         <div class="container-fluid">
             <a class="navbar-brand">
-                <img src="{% static 'images/logo.png' %}" alt="Logo" width="350" height="51"
+                <img src="{% static 'images/logo.png' %}" alt="Logo" width="350" height="50"
                     class="d-inline-block align-text-top"> 
             </a>
 
@@ -86,19 +86,27 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {{ mahasiswa.last_out_kendaraan|default:"-" }}
-                                </td>
-                                <td>
-                                    {% if mahasiswa.screenshot %}
-                                        {% for screenshot in mahasiswa.screenshot %}
-                                            <a href="{{ screenshot.url }}" target="_blank">
-                                                <img src="{{ screenshot.url }}" alt="Screenshot" width="50">
-                                            </a>
-                                        {% endfor %}
+                                    {% if mahasiswa.last_out %}
+                                        {% with last_out_item=mahasiswa.last_out|last %}
+                                            {% if last_out_item %}
+                                                <div>
+                                                    {% if last_out_item.datetime %}
+                                                        {{ last_out_item.datetime }}
+                                                    {% else %}
+                                                        No datetime available
+                                                    {% endif %}
+                                                </div>
+                                            {% else %}
+                                                No valid data in last_out
+                                            {% endif %}
+                                        {% endwith %}
                                     {% else %}
-                                        Tidak ada screenshot
+                                        -
                                     {% endif %}
-                                </td>
+                                </td>                                                        
+                                <td>
+                                    <a href="{% url 'mahasiswa_detail' mahasiswa.nim %}" class="btn btn-info text-light">View Details</a>
+                                </td>           
                                 <td>
                                     <a href="#editMahasiswaModal" class="edit btn-edit" data-toggle="modal" data-nim="{{ mahasiswa.nim }}"
                                             data-nama="{{ mahasiswa.nama }}"

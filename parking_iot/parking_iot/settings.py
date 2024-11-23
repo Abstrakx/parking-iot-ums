@@ -127,7 +127,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "static",
                     os.path.join(BASE_DIR, 'qr_code_kendaraan'),
-                    os.path.join(BASE_DIR, 'qr_code_mahasiswa'),]
+                    os.path.join(BASE_DIR, 'qr_code_mahasiswa'),
+                    os.path.join(BASE_DIR, 'screenshots')]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

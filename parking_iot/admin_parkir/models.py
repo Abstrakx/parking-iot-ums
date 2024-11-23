@@ -62,6 +62,17 @@ class mahasiswa(models.Model):
         # Simpan objek ke database
         super().save(*args, **kwargs)
 
+    def save_last_out(self, timestamp):
+        """
+        Perbarui field last_out tanpa memicu logika di metode save().
+        """
+        if not isinstance(timestamp, str):
+            raise ValueError("Timestamp harus berupa string dengan format yang benar.")
+        
+        if not hasattr(self, 'last_out'):
+            self.last_out = []
+        self.last_out.append(timestamp)
+        self.save(update_fields=['last_out'])
 
     def __str__(self):
         return f"{self.nama} ({self.nim})"
